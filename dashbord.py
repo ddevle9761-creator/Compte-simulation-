@@ -44,8 +44,8 @@ class App(QWidget):
             b.setObjectName("btn-primary")
 
         sidebar = QVBoxLayout()
-        sidebar.setContentsMargins(12, 12, 12, 12)
-        sidebar.setSpacing(12)
+        sidebar.setContentsMargins(10, 10, 10, 10)
+        sidebar.setSpacing(10)
         sidebar.addWidget(self.btn_tableau)
         sidebar.addWidget(self.btn_utilisateurs)
         sidebar.addWidget(self.btn_transaction)
