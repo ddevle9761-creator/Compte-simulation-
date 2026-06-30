@@ -8,8 +8,8 @@
 *tools
 README.md
 .env.example
-tests/
-param/
+*tests/
+*param/
 
 
 
