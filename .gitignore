@@ -7,4 +7,9 @@
 *data
 *tools
 README.md
+.env.example
+tests/
+param/
+
+
 
