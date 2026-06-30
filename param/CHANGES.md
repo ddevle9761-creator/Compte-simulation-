@@ -32,7 +32,7 @@ Actions appliquées:
 
 Note: Je n'ai pas modifié `model.py` conformément à la contrainte précédente — la recommandation sur le hachage/suppression des mots de passe reste valide et peut être appliquée si vous l'autorisez.
 
-Fichiers modifiés: [sauvegarde_json.py](sauvegarde_json.py), [comptservice.py](comptservice.py), [transfer_service.py](transfer_service.py), [page_user.py](page_user.py), [page_transfer.py](page_transfer.py), [expe_page.py](expe_page.py), [email/emails.py](email/emails.py)
+Fichiers modifiés: [sauvegarde_json.py](../sauvegarde_json.py), [comptservice.py](../comptservice.py), [transfer_service.py](../transfer_service.py), [page_user.py](../page_user.py), [page_transfer.py](../page_transfer.py), [expe_page.py](../expe_page.py), [email/emails.py](../email/emails.py)
 
 Si vous voulez, je peux:
 
