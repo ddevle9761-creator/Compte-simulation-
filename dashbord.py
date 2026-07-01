@@ -1,6 +1,7 @@
 import sys
 from collections import Counter
 
+
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPainter
 from PySide6.QtCharts import (
@@ -103,6 +104,7 @@ class App(QWidget):
         page_layout.addLayout(section_layout)
 
         page_layout.addStretch(1)
+
         return page
 
     def create_stat_card(self, title, value, description):
@@ -127,6 +129,9 @@ class App(QWidget):
         layout.addWidget(description_label)
         layout.addStretch(1)
         return card
+
+
+
 
     def create_age_chart(self):
         card = QWidget()
@@ -234,9 +239,6 @@ class App(QWidget):
             chart.addAxis(axis_y, Qt.AlignLeft)
             scatter.attachAxis(axis_y)
 
-
-
-
         else:
             pie_series = QPieSeries()
             for age, count in sorted(frequency.items()):
@@ -250,6 +252,9 @@ class App(QWidget):
         chart_view = QChartView(chart)
         chart_view.setRenderHint(QPainter.Antialiasing)
         layout.addWidget(chart_view)
+
+
+
 
         return card
 

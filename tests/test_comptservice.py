@@ -18,11 +18,11 @@ class TestCompteService(unittest.TestCase):
         sauvegarde_json._DEFAULT_MANAGER = JsonManager(self.test_file)
         self.jm = sauvegarde_json._DEFAULT_MANAGER
 
-    def premier_t(self):
+    def test_premier_t(self):
         if os.path.exists(self.test_file):
             os.remove(self.test_file)
-
-    def deuxieme_t(self):
+        
+    def test_deuxieme_t(self):
         # start empty
         self.jm.save_user([])
         user = ServieCompte(nom='t', prenom='t', age=30, sexe='M', mdp='p', email='t@example.com', solde=100, numero=10101)
@@ -30,7 +30,7 @@ class TestCompteService(unittest.TestCase):
         users = self.jm.charger_json()
         self.assertTrue(any(u.get('email') == 't@example.com' for u in users))
 
-    def triosiem_t(self):
+    def test_triosiem_t(self):
         self.jm.save_user([])
         user = ServieCompte(nom='d', prenom='d', age=25, sexe='F', mdp='p', email='d@example.com', solde=100, numero=101010)
         self.assertTrue(user.save())
@@ -41,7 +41,7 @@ class TestCompteService(unittest.TestCase):
         self.assertIsNotNone(u)
         self.assertEqual(u.get('_solde'), 150)
 
-    def quatrien(self):
+    def test_quatrien(self):
         self.jm.save_user([])
         user = ServieCompte(nom='r', prenom='r', age=40, sexe='M', mdp='p', email='r@example.com', solde=10, numero=101010)
         self.assertTrue(user.save())
@@ -52,7 +52,7 @@ class TestCompteService(unittest.TestCase):
         self.assertIsNotNone(u)
         self.assertEqual(u.get('_solde'), 10)
 
-    def dernier_test(self):
+    def test_dernier_test(self):
         self.jm.save_user([])
         user = ServieCompte(nom='x', prenom='x', age=22, sexe='F', mdp='p', email='x@example.com', solde=5, numero=1211)
         self.assertTrue(user.save())

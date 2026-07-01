@@ -119,12 +119,10 @@ class Compte:
 
 
     def recevoir(self, montant:int):
-        ok = False
         if montant <= 0 :
             raise ValueError('Montant invalide')
         self._solde += montant
-        ok = True
-        return ok
+        return True
 
 
     def transferer(self, exp, dst, montant):
@@ -133,7 +131,6 @@ class Compte:
         else:
             exp._solde -= montant
             dst.recevoir(montant)
-
 
 
 

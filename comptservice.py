@@ -104,7 +104,9 @@ class ServieCompte(Compte):
     def transferer(self, exp, dst, montant):
         if montant <= 0 or exp._solde <= 0 or montant >= exp._solde:
             raise ValueError('Solde insuffisant')
+        exp._solde -= montant
         super().transferer(exp, dst, montant)
+
 
     @staticmethod
     def get_user_by_id(user_id):
