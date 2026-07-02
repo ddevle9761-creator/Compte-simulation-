@@ -107,6 +107,19 @@ class ServieCompte(Compte):
         exp._solde -= montant
         super().transferer(exp, dst, montant)
 
+    @staticmethod
+    def check_email(email):
+        find = '@gmail.com'
+        if find in email :
+            return True
+        return False
+
+    @staticmethod
+    def check_number(number):
+        if number.isdigit():
+            return True
+        return False
+
 
     @staticmethod
     def get_user_by_id(user_id):

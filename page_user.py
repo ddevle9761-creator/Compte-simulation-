@@ -187,7 +187,11 @@ class Page_user(QtWidgets.QWidget):
         m = self.mdp.text()
         so = self.solde.value()
         num = self.numero_input.text()
-        if not n or not p or a < 18 or not s or len(m) < 8 or so <= 0 :
+
+        ckeck_em = ServieCompte.check_email(email=e)
+        check_nu = ServieCompte.check_number(number=num)
+
+        if not n or not p or a < 18 or not s or len(m) < 8 or so <= 0 or not ckeck_em or not check_nu:
             QMessageBox.warning(self, 'Erreur', 'Veuillez remplir correctement les champs')
             return
         u = ServieCompte(nom=n, prenom=p, age=a, sexe=s, mdp=m, solde=so, email=e, numero=num, id=None)

@@ -1,12 +1,8 @@
 import sys
 from transfer_service import TransferService
 from PySide6 import QtWidgets, QtCore
-from PySide6.QtCore import QThread
-
 from comptservice import ServieCompte
-from thread_principal.emain_thread import Emain_thread
 import datetime
-
 
 
 
@@ -18,8 +14,6 @@ class Transfer(QtWidgets.QWidget):
         self.setupUi()
         self.connexion()
         self.populate_user()
-
-
 
     def setupUi(self):
         self.main_layout = QtWidgets.QVBoxLayout(self)
@@ -53,8 +47,7 @@ class Transfer(QtWidgets.QWidget):
 
         self.nom_input = QtWidgets.QLineEdit()
         self.prenom_input = QtWidgets.QLineEdit()
-        self.solde = QtWidgets.QSpinBox()
-        self.solde.setRange(0, 100000)
+        self.solde = QtWidgets.QSpinBox(self)
         self.numero_input = QtWidgets.QLineEdit()
         self.btn_transfer = QtWidgets.QPushButton("Envoie")
         self.email =QtWidgets.QLineEdit()
@@ -64,7 +57,7 @@ class Transfer(QtWidgets.QWidget):
         self.email.setEnabled(False)
 
 
-
+        self.solde.setMinimum(1)
         self.nom_input.setPlaceholderText("Nom")
         self.prenom_input.setPlaceholderText("Prénom")
         self.solde.setPrefix("FCFA ")
@@ -89,8 +82,6 @@ class Transfer(QtWidgets.QWidget):
     def connexion(self):
         self.comb.currentTextChanged.connect(self.show_user)
         self.btn_transfer.clicked.connect(self.envoie)
-
-
 
     def populate_user(self) :
         users = ServieCompte.get_users()
@@ -123,6 +114,7 @@ class Transfer(QtWidgets.QWidget):
 
         users = ServieCompte.get_users()
 
+        
         if self.expediteur is not None:
             sender = self.expediteur
         else:
@@ -133,49 +125,26 @@ class Transfer(QtWidgets.QWidget):
             return
 
         transfert = TransferService(expeditaire=sender, destinateur=dst, montant=self.solde.value())
-        self._pending_transfer = {'sender': sender, 'dst': dst}
-        self.btn_transfer.setEnabled(False)
-
-        self.thread = QThread(self)
-        self.worker = Emain_thread(target=transfert.transferer)
-
-        self.worker.moveToThread(self.thread)
-        self.thread.started.connect(self.worker.run)
-        self.worker.finished.connect(self._transfer_finished)
-        self.worker.finished.connect(self.thread.quit)
-        self.worker.error.connect(self._transfer_failed)
-        self.worker.finished.connect(self.worker.deleteLater)
-        self.thread.finished.connect(self.thread.deleteLater)
-        self.thread.start()
-
-    def _transfer_finished(self, _result=None):
-        self.btn_transfer.setEnabled(True)
-        context = getattr(self, '_pending_transfer', None)
-        if not context:
+        try:
+            transfert.transferer()
+        except Exception as e:
+            QtWidgets.QMessageBox(text=str(e), parent=self).exec()
             return
-        sender = context['sender']
-        dst = context['dst']
-        self.list_users.clear()
-        self.list_users.addItem(
-            f"Transfert de {sender.nom} . {sender.prenom}\nA "
-            f"{dst.nom} | {dst.prenom}\n"
-            f"Le {datetime.datetime.now().strftime('%d/%m/%Y %H:%M ')}"
-        )
         QtWidgets.QMessageBox(text='reussie', parent=self).exec()
-        self._pending_transfer = None
+        self.list_users.clear()
+        self.list_users.addItem(f"Transfert de {sender.nom} . {sender.prenom}\nA "
+                                f"{dst.nom} | {dst.prenom}\n"
+                                f"Le {datetime.datetime.now().strftime("%d/%m/%Y %H:%M ")}"
+                               )
 
-    def _transfer_failed(self, message):
-        self.btn_transfer.setEnabled(True)
-        QtWidgets.QMessageBox(text=message, parent=self).exec()
-        self._pending_transfer = None
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-
-    with open('assets/styles.qss', 'r') as f :
+    with open('assets/styles.qss', 'r') as f:
         app.setStyleSheet(f.read())
+    window = Transfer()
+    window.show()
+    sys.exit(app.exec())
 
-    form = Transfer()
-    form.show()
-    sys.exit(app.exec_())
+
+
