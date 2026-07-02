@@ -102,7 +102,7 @@ class ServieCompte(Compte):
         return False
 
     def transferer(self, exp, dst, montant):
-        if montant <= 0 or exp._solde <= 0 or montant >= exp._solde:
+        if montant <= 0 or exp._solde <= 0 or montant >= exp._solde or not exp.nom.isalpha():
             raise ValueError('Solde insuffisant')
         exp._solde -= montant
         super().transferer(exp, dst, montant)
@@ -124,6 +124,17 @@ class ServieCompte(Compte):
     @staticmethod
     def get_user_by_id(user_id):
         return next((u for u in ServieCompte.get_users() if u._id == user_id), None)
+
+    def check_email(self, email):
+        find = '@gmail.com'
+        if find in email :
+            return True
+        return False
+
+    def check_number(self, number):
+        if number.isdigit():
+            return True
+        return False
 
 
 

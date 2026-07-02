@@ -169,7 +169,6 @@ class Page_user(QtWidgets.QWidget):
         self.list_user.clear()
         users = ServieCompte.get_users()
         for i, user in enumerate(users):
-          
             text = f"{getattr(user,'_id',i)} • {user.nom} {user.prenom}"
             item = QtWidgets.QListWidgetItem(text)
             item.setData(QtCore.Qt.UserRole, user)
@@ -188,10 +187,11 @@ class Page_user(QtWidgets.QWidget):
         so = self.solde.value()
         num = self.numero_input.text()
 
-        ckeck_em = ServieCompte.check_email(email=e)
-        check_nu = ServieCompte.check_number(number=num)
+        ok_email = ServieCompte.check_email(e)
+        ok_num = ServieCompte.check_number(num)
 
-        if not n or not p or a < 18 or not s or len(m) < 8 or so <= 0 or not ckeck_em or not check_nu:
+        if not n or len(n) <3 or not p or len(p) <3 or a < 18 or not s or len(m) < 8 or so <= 0 or not ok_email or not ok_num:
+
             QMessageBox.warning(self, 'Erreur', 'Veuillez remplir correctement les champs')
             return
         u = ServieCompte(nom=n, prenom=p, age=a, sexe=s, mdp=m, solde=so, email=e, numero=num, id=None)
