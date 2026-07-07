@@ -169,7 +169,7 @@ class Page_user(QtWidgets.QWidget):
         self.list_user.clear()
         users = ServieCompte.get_users()
         for i, user in enumerate(users):
-            text = f"{getattr(user,'_id',i)} • {user.nom} {user.prenom}"
+            text = f"{i} • {user[1]} {user[2]}"
             item = QtWidgets.QListWidgetItem(text)
             item.setData(QtCore.Qt.UserRole, user)
             self.list_user.addItem(item)
@@ -187,8 +187,8 @@ class Page_user(QtWidgets.QWidget):
         so = self.solde.value()
         num = self.numero_input.text()
 
-        ok_email = ServieCompte.check_email(e)
-        ok_num = ServieCompte.check_number(num)
+        ok_email = ServieCompte.check_email(email=e)
+        ok_num = ServieCompte.check_number(number=num)
 
         if not n or len(n) <3 or not p or len(p) <3 or a < 18 or not s or len(m) < 8 or so <= 0 or not ok_email or not ok_num:
 
@@ -226,7 +226,7 @@ class Page_user(QtWidgets.QWidget):
 
     def show_user(self, item):
         user = item.data(QtCore.Qt.UserRole)
-        if user is None or not hasattr(user, '_id'):
+        if user is None :
             QtWidgets.QMessageBox(text='Impossible de charger les informations de l\'utilisateur.', parent=self).exec()
             return
 
@@ -235,14 +235,14 @@ class Page_user(QtWidgets.QWidget):
             if item.widget():
                 item.widget().deleteLater()
 
-        lbl_id = QtWidgets.QLabel(f'{user._id}')
-        lbl_nom = QtWidgets.QLabel(user.nom)
-        lbl_prenom = QtWidgets.QLabel(user.prenom)
-        lbl_age = QtWidgets.QLabel(f"{user.age} ans")
-        lbl_sexe = QtWidgets.QLabel(user.sexe)
-        lbl_email = QtWidgets.QLabel(user.email)
-        lbl_numero = QtWidgets.QLabel(str(user.numero))
-        lbl_solde = QtWidgets.QLabel(f"{user._solde} FCFA")
+        lbl_id = QtWidgets.QLabel(f'{user[0]}')
+        lbl_nom = QtWidgets.QLabel(user[1])
+        lbl_prenom = QtWidgets.QLabel(user[2])
+        lbl_age = QtWidgets.QLabel(f"{user[3]} ans")
+        lbl_sexe = QtWidgets.QLabel(user[4])
+        lbl_email = QtWidgets.QLabel(user[6])
+        lbl_numero = QtWidgets.QLabel(str(user[5]))
+        lbl_solde = QtWidgets.QLabel(f"{user[8]} FCFA")
 
         for lbl in (lbl_id, lbl_nom, lbl_prenom, lbl_age, lbl_sexe, lbl_email, lbl_numero, lbl_solde):
             lbl.setWordWrap(True)

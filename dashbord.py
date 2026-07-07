@@ -11,6 +11,7 @@ from PySide6.QtCharts import (
 from comptservice import ServieCompte
 from page_user import Page_user
 from expe_page import  Expe
+from liste_users import Stactistique
 
 
 
@@ -34,14 +35,15 @@ class App(QWidget):
         self.setup_connections()
 
     def setup_ui(self):
-        # Barres de navigation — boutons en colonne (barre latérale)
+        # Barres de navigation — boutons en colonne
         self.btn_tableau = QPushButton("Tableau")
         self.btn_utilisateurs = QPushButton("Utilisateurs")
         self.btn_transaction = QPushButton("Transactions")
         self.btn_transfer = QPushButton("Transfert")
         self.btn_supprimer = QPushButton("Supprimer")
+        self.btn_graph = QPushButton("Graphique")
 
-        for b in (self.btn_tableau, self.btn_utilisateurs, self.btn_transaction, self.btn_transfer):
+        for b in (self.btn_tableau, self.btn_utilisateurs, self.btn_transaction, self.btn_transfer, self.btn_graph):
             b.setObjectName("btn-primary")
 
         sidebar = QVBoxLayout()
@@ -51,6 +53,7 @@ class App(QWidget):
         sidebar.addWidget(self.btn_utilisateurs)
         sidebar.addWidget(self.btn_transaction)
         sidebar.addWidget(self.btn_transfer)
+        sidebar.addWidget(self.btn_graph)
         sidebar.addStretch(1)
         sidebar.addWidget(self.btn_supprimer)
 
@@ -60,10 +63,12 @@ class App(QWidget):
         self.pile_pages.addWidget(self.create_dashboard_page())
         self.page_utilisateur = Page_user()
         self.page_trasfer = Expe()
+        self.page_graph = Stactistique()
         self.pile_pages.addWidget(self.page_utilisateur)
         self.pile_pages.addWidget(self.creer_page_supprimer())
         self.pile_pages.addWidget(self.creer_page_transaction())
         self.pile_pages.addWidget(self.page_trasfer)
+        self.pile_pages.addWidget(self.page_graph)
 
         main_layout = QHBoxLayout(self)
         main_layout.setContentsMargins(16, 16, 16, 16)
@@ -160,8 +165,8 @@ class App(QWidget):
         layout.addWidget(self.chart_type)
 
         users = ServieCompte.get_users()
-        ages = [u.age for u in users if isinstance(u.age, (int, float))]
-        solde = [u._solde for u in users if isinstance(u._solde, (int, float))]
+        ages = [u[3] for u in users if isinstance(u[3], (int, float))]
+        solde = [u[-1] for u in users if isinstance(u[-1], (int, float))]
         frequency = Counter(ages)
 
         if not frequency:
@@ -303,7 +308,7 @@ class App(QWidget):
         def refresh_list():
             liste.clear()
             for u in ServieCompte.get_users():
-                liste.addItem(f"{u._id} | {u.nom} | {u.prenom} | {u.age} {u.email}")
+                liste.addItem(f"{u[0]} | {u[1]} | {u[2]} | {u[3]} {u[6]}")
 
         btn_sup = QPushButton("Supprimer sélection")
 
@@ -413,19 +418,17 @@ class App(QWidget):
         return len(ServieCompte.get_users())
 
     def total_balance(self):
-        return sum(u._solde for u in ServieCompte.get_users())
+        return ServieCompte.total_balance()
 
     def average_age(self):
-        users = ServieCompte.get_users()
-        if not users:
-            return 0
-        return round(sum(u.age for u in users) / len(users), 1)
+        if ServieCompte.total_age():
+            return ServieCompte.total_age()
 
     def refresh_user_preview(self):
         users = ServieCompte.get_users()
         self.liste_apercu.clear()
         for user in users:
-            self.liste_apercu.addItem(f"{user._id} • {user.nom} {user.prenom}")
+            self.liste_apercu.addItem(f"{user[0]} • {user[1]} {user[2]}")
 
 
     def filtrer_apercu(self, texte: str):
@@ -436,11 +439,11 @@ class App(QWidget):
             filtres = users[:6]
         else:
             for u in users:
-                if q in str(u.nom).lower() or q in str(u.prenom).lower() or q in str(u._id):
+                if q in str(u[1]).lower() or q in str(u[2]).lower() or q in str(u[0]):
                     filtres.append(u)
         self.liste_apercu.clear()
         for user in filtres[:6]:
-            self.liste_apercu.addItem(f"{user._id} • {user.nom} {user.prenom}")
+            self.liste_apercu.addItem(f"{user[0]} • {user[1]} {user[2]}")
 
     def refresh_dashboard(self):
         self.pile_pages.removeWidget(self.pile_pages.widget(0))
@@ -453,7 +456,7 @@ class App(QWidget):
             self.transaction_compte.clear()
             for user in ServieCompte.get_users():
                
-                self.transaction_compte.addItem(f"{user._id} • {user.nom} {user.prenom}", user._id)
+                self.transaction_compte.addItem(f"{user[0]} • {user[1]} {user[2]}", user[0])
             self.update_solde_actuel()
 
     def update_solde_actuel(self):
@@ -463,7 +466,7 @@ class App(QWidget):
             return
         user = ServieCompte.get_user_by_id(uid)
         if user:
-            self.solde_actuel_label.setText(f"Solde actuel : {user._solde} fcfa")
+            self.solde_actuel_label.setText(f"Solde actuel : {user[-1]} fcfa")
         else:
             self.solde_actuel_label.setText("Solde actuel : 0")
 
@@ -494,6 +497,7 @@ class App(QWidget):
         self.btn_transaction.clicked.connect(self.afficher_page_transaction)
         self.btn_supprimer.clicked.connect(self.afficher_page_supprimer)
         self.btn_transfer.clicked.connect(self.afficher_page_transfert)
+        self.btn_graph.clicked.connect(self.afficher_page_graph)
 
     def show_dashboard(self):
         self.pile_pages.setCurrentIndex(0)
@@ -515,6 +519,9 @@ class App(QWidget):
 
     def afficher_page_transfert(self):
         self.pile_pages.setCurrentIndex(4)
+
+    def afficher_page_graph(self):
+        self.pile_pages.setCurrentIndex(5)
 
     def basculer_mode_graphique(self):
         current = getattr(self, 'mode_graphique', 'hist')

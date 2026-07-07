@@ -16,18 +16,20 @@ class Compte:
         if _id is None :
             self._id = Compte.id_user(Compte.id)
             Compte.id += 1
+
         self.nom = nom
         self.prenom = prenom
         self.age = age
         self.sexe = sexe
         self.email = email
-        self._mdp = _mdp
+        self._mdp = _mdp.__hash__()
         self._solde = _solde
         self.numero = numero
 
     # pour l'attribution des id
     @classmethod
     def id_user(cls, id):
+        last = []
         for cls in Compte.__subclasses__():
             if cls.id == id :
                 Compte.id = cls.id
@@ -57,17 +59,18 @@ class Compte:
 
 
     def to_dict(self) :
-        return {
-            "_id" : self._id,
-            "nom" : self.nom,
-            "prenom" : self.prenom,
-            "age" : self.age,
-            "sexe" : self.sexe,
-            "email" : self.email,
-            "_mdp" : self._mdp,
-            'numero': self.numero,
-            "_solde" : self.solde,
-        }
+        return (
+            self.nom,
+            self.prenom,
+            self.age,
+            self.sexe,
+            self.numero,
+            self.email,
+            self._mdp,
+            self._solde,
+
+
+        )
 
     @classmethod
     def from_dict(cls, data) :
@@ -148,6 +151,8 @@ def get_manager(file_path=None):
 
 if __name__ == '__main__':
     manager = get_manager()
+    last = [i for i in manager.charger_json() if i['_id'] == 1]
+    print(last)
 
 
 

@@ -1,4 +1,4 @@
-from sauvegarde_json import get_manager
+from reposit import  get_manager
 from model import Compte
 
 
@@ -22,34 +22,17 @@ class ServieCompte(Compte):
         if id is not None:
             self._id = id
 
-    def save(self):
-        data = {'_id': self._id,
-            "nom":self.nom,
-            'prenom': self.prenom,
-            'age': self.age,
-            'sexe': self.sexe,
-            'email': self.email,
-            'numero': self.numero,
-            '_mdp':self._mdp,
-            '_solde': self.solde
-            }
+    def to_dict(self):
+        return super().to_dict()
 
-        jm = get_manager()
-        users = jm.charger_json()
-        users = [e for e in users if e.get('_id') != self._id]
-        users.append(data)
-        jm.save_user(users)
+    def save(self):
+        base = get_manager()
+        base.sauvegarde_user(self.to_dict())
         return True
 
     def remove_user(self):
-        jm = get_manager()
-        users = jm.charger_json()
-        users = [e for e in users if e.get("_id") != self._id]
-        jm.save_user(users)
+        user = manager.supprime_par_id(self._id)
         return True
-
-
-
 
     def update_user(self, u):
         if self.check_user(u):
@@ -60,26 +43,12 @@ class ServieCompte(Compte):
 
     @staticmethod
     def get_users():
-        users_all = ServieCompte._get_users()
-        result = []
-        for u in users_all:
-            result.append(ServieCompte(
-                nom=u.get('nom'),
-                prenom=u.get('prenom'),
-                age=u.get('age'),
-                sexe=u.get('sexe'),
-                email=u.get('email'),
-                mdp=u.get('_mdp'),
-                solde=u.get('_solde'),
-                numero=u.get('numero'),
-                id=u.get('_id')
-            ))
-        return result
+        return ServieCompte.__get_users__()
 
     @staticmethod
-    def _get_users():
+    def __get_users__():
         jm = get_manager()
-        return jm.charger_json()
+        return jm.les_users()
 
     def show_user(self):
         return self.show_info()
@@ -107,6 +76,7 @@ class ServieCompte(Compte):
         exp._solde -= montant
         super().transferer(exp, dst, montant)
 
+
     @staticmethod
     def check_email(email):
         find = '@gmail.com'
@@ -123,22 +93,44 @@ class ServieCompte(Compte):
 
     @staticmethod
     def get_user_by_id(user_id):
-        return next((u for u in ServieCompte.get_users() if u._id == user_id), None)
+        babe = get_manager()
+        return babe.rechercher_par_id(user_id)
 
-    def check_email(self, email):
-        find = '@gmail.com'
-        if find in email :
-            return True
-        return False
+    @staticmethod
+    def total_balance():
+        montant = get_manager().total_balance()
+        st = 0
+        for i in range(len(montant)) :
+            for row in montant :
+                st += row[0]
+        return st
 
-    def check_number(self, number):
-        if number.isdigit():
-            return True
-        return False
+    @staticmethod
+    def total_age():
+        us = get_manager().les_users()
+        if len(us) != 0 :
+            age = []
+            for i in us:
+                age.append(i[3])
+
+            return round(sum(age) / len(us), 1)
+        return 0
+
+
+
+
 
 
 
 if __name__ == '__main__':
     manager = get_manager()
+    ser = ServieCompte(nom='s', prenom='d', age=18, email='jd', mdp='123', solde=100, numero=900, sexe='m')
+
+    print(manager.les_users())
+
+
+
+
+
 
 

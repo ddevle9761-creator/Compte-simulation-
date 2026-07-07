@@ -86,13 +86,16 @@ class Transfer(QtWidgets.QWidget):
     def populate_user(self) :
         users = ServieCompte.get_users()
         for user in users :
-           
-            if self.expediteur is not None and getattr(user, '_id', None) == getattr(self.expediteur, '_id', None):
+
+            if self.expediteur is not None and user == self.expediteur:
                 continue
-            text = f"{user._id} | {user.nom} | {user.prenom} | {user.age} ans | {user.sexe}"
+
+
+            text = f"{user[0]} | {user[1]} | {user[2]} | {user[3]} ans | {user[4]}"
             list_item = QtWidgets.QListWidgetItem(text)
             list_item.setData(QtCore.Qt.UserRole, user)
             self.comb.addItem(text, userData=user)
+
 
 
 
@@ -100,10 +103,10 @@ class Transfer(QtWidgets.QWidget):
         user = self.comb.currentData()
         if not user:
             return
-        self.nom_input.setText(user.nom)
-        self.prenom_input.setText(user.prenom)
-        self.email.setText(user.email)
-        self.numero_input.setText(user.numero)
+        self.nom_input.setText(user[1])
+        self.prenom_input.setText(user[2])
+        self.email.setText(user[6])
+        self.numero_input.setText(str(user[5]))
 
 
     def envoie(self):
@@ -118,22 +121,28 @@ class Transfer(QtWidgets.QWidget):
         if self.expediteur is not None:
             sender = self.expediteur
         else:
-            sender = next((u for u in users if getattr(u, '_id', None) != getattr(dst, '_id', None)), None)
+            sender = next((u[0] for u in users if u[0] != dst[0]), None)
 
         if sender is None:
             QtWidgets.QMessageBox(text='Aucun expéditeur disponible', parent=self).exec()
             return
 
-        transfert = TransferService(expeditaire=sender, destinateur=dst, montant=self.solde.value())
+        print(sender)
+        print(dst)
+        expe = ServieCompte(nom=sender[1], prenom=sender[2], age=sender[3], sexe=sender[4], numero=sender[5], email=sender[6], mdp=sender[7], solde=sender[8])
+        dst = ServieCompte(nom=dst[1], prenom=dst[2], age=dst[3], sexe=dst[4], numero=dst[5], email=dst[6], mdp=dst[7], solde=dst[8])
+
+
+        transfert = TransferService(expeditaire=expe, destinateur=dst, montant=self.solde.value())
         try:
             transfert.transferer()
-        except Exception as e:
+        except ValueError as e:
             QtWidgets.QMessageBox(text=str(e), parent=self).exec()
             return
         QtWidgets.QMessageBox(text='reussie', parent=self).exec()
         self.list_users.clear()
-        self.list_users.addItem(f"Transfert de {sender.nom} . {sender.prenom}\nA "
-                                f"{dst.nom} | {dst.prenom}\n"
+        self.list_users.addItem(f"Transfert de {sender[1]} • {sender[2]}\nA "
+                                f"{dst.nom} • {dst.prenom}\n"
                                 f"Le {datetime.datetime.now().strftime("%d/%m/%Y %H:%M ")}"
                                )
 
