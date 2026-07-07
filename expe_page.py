@@ -68,13 +68,13 @@ class Expe(QtWidgets.QWidget):
     def populate_user(self) :
         users = ServieCompte.get_users()
         for user in users :
-            text = f"{user._id} | {user.nom} | {user.prenom} | {user.age} ans | {user.sexe}"
+            text = f"{user[0]} | {user[1]} | {user[2]} | {user[3]} ans | {user[4]}"
             self.comb.addItem(text, user)
 
 
     def show_user(self):
         user_selected = self.comb.currentData()
-        text = f"{user_selected._id} | {user_selected.nom} | {user_selected.prenom} | {user_selected.age} ans | {user_selected.sexe}"
+        text = f"{user_selected[0]} | {user_selected[1]} | {user_selected[2]} | {user_selected[3]} ans | {user_selected[4]}"
         if self.list_users.count() >= 1:
             self.list_users.clear()
         self.list_users.addItem(text)
@@ -84,7 +84,7 @@ class Expe(QtWidgets.QWidget):
         user = self.comb.currentData()
         self.page = Transfer(expediteur=user)
         edit_password = self.edit_password.text()
-        if user._mdp == edit_password:
+        if user[7] == edit_password:
             self.edit_password.setText("")
             self.page.show()
         else:

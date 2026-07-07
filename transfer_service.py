@@ -1,7 +1,7 @@
 import datetime
 import uuid
 import os
-from sauvegarde_json import get_manager
+from reposit import get_manager
 
 from email_service.emails import Email_Worker
 
@@ -29,20 +29,17 @@ class TransferService:
 
 
 
-        historique = {
-            'transaction_id': self.transaction,
-            'source': self.expeditaire.nom,
-            'destination': self.destinateur.nom,
-            'montant': self.montant,
-            'date': self.date
-        }
+        historique = (
+            self.expeditaire.nom,
+            self.destinateur.nom,
+            self.montant,
+            self.date
+        )
         
         
-        jm = get_manager(file_path=os.path.join('data', 'transaction.json'))
-        histo = jm.list_transactions()
-        histo = [e for e in histo if e.get('transaction_id') != self.transaction]
-        histo.append(historique)
-        jm.save_transaction(histo)
+        base = get_manager()
+        base.sauvegarde_transaction(historique)
+
 
 
 
