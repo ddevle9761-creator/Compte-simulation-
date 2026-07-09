@@ -44,6 +44,7 @@ class Compte:
     def deposer(self, montant) -> bool :
         if montant <= 0 :
             return False
+
         self._solde += montant
         return True
 
@@ -145,14 +146,14 @@ class Compte:
             return f"•Id : {self._id} •Nom : {self.nom} •Prenom : {self.prenom} •Âge : {self.age} •Sexe {self.sexe} •Email {self.email}"
 
 def get_manager(file_path=None):
-    from sauvegarde_json import get_manager as _get_manager
+    from reposit import get_manager as _get_manager
     return _get_manager(file_path)
 
 
 if __name__ == '__main__':
     manager = get_manager()
-    last = [i for i in manager.charger_json() if i['_id'] == 1]
-    print(last)
+    ser = Compte(nom='s', prenom='d', age=18, email='jd', _mdp='123', _solde=100, numero=900, sexe='m')
 
+    print(type(ser._solde))
 
 
