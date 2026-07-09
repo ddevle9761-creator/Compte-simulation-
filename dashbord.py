@@ -466,7 +466,7 @@ class App(QWidget):
             return
         user = ServieCompte.get_user_by_id(uid)
         if user:
-            self.solde_actuel_label.setText(f"Solde actuel : {user[-1]} fcfa")
+            self.solde_actuel_label.setText(f"Solde actuel : {user._solde} fcfa")
         else:
             self.solde_actuel_label.setText("Solde actuel : 0")
 
@@ -481,10 +481,11 @@ class App(QWidget):
         if user is None:
             QMessageBox.warning(self, 'Erreur', "Utilisateur introuvable")
             return
-        if action == 'retrait' and montant > user._solde:
+        if action == 'retrait' and int(montant) > user._solde:
             QMessageBox.warning(self, 'Erreur', "Solde insuffisant")
             return
-        if not user.transacter(montant, action):
+
+        if not user.transacter(int(montant), action):
             QMessageBox.warning(self, 'Erreur', "Transaction impossible")
             return
         QMessageBox.information(self, 'Succès', 'Transaction enregistrée')

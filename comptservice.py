@@ -25,6 +25,21 @@ class ServieCompte(Compte):
     def to_dict(self):
         return super().to_dict()
 
+
+    def make_obj(user):
+        return ServieCompte(
+            nom=user[0],
+            prenom=user[1],
+            age=user[2],
+            sexe=user[3],
+            numero=user[4],
+            email=user[5],
+            mdp=user[5],
+            solde=user[6]
+
+        )
+
+
     def save(self):
         base = get_manager()
         base.sauvegarde_user(self.to_dict())
@@ -53,21 +68,21 @@ class ServieCompte(Compte):
     def show_user(self):
         return self.show_info()
 
-    def deposer(self, value):
+    def deposer(self, value:int):
         return super().deposer(value)
 
-    def retirer(self, value):
+    def retirer(self, value:int):
         return super().retirer(value)
 
-    def transacter(self, montant, action='depot'):
+    def transacter(self, montant:int, action='depot'):
         if action == 'depot':
-            ok = self.deposer(montant)
+            ok = self.deposer(int(montant))
         elif action == 'retrait':
             ok = self.retirer(montant)
         else:
             return False
         if ok:
-            return self.save()
+            return True
         return False
 
     def transferer(self, exp, dst, montant):
@@ -94,7 +109,19 @@ class ServieCompte(Compte):
     @staticmethod
     def get_user_by_id(user_id):
         babe = get_manager()
-        return babe.rechercher_par_id(user_id)
+        user = babe.rechercher_par_id(user_id)
+        return ServieCompte(
+            id=user_id,
+            nom=user[1],
+            prenom=user[2],
+            age=user[3],
+            sexe=user[4],
+            numero=user[5],
+            email=user[6],
+            mdp=user[7],
+            solde=user[8]
+
+        )
 
     @staticmethod
     def total_balance():
@@ -126,7 +153,10 @@ if __name__ == '__main__':
     manager = get_manager()
     ser = ServieCompte(nom='s', prenom='d', age=18, email='jd', mdp='123', solde=100, numero=900, sexe='m')
 
-    print(manager.les_users())
+    user = ('nom', 'prenom', 10, 'email', 'mdp', 'solde', 'numero', 'sexe')
+    for i in ServieCompte.get_users():
+        print(i)
+
 
 
 
