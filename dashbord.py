@@ -324,9 +324,9 @@ class App(QWidget):
                     continue
                 
                 users = ServieCompte.get_users()
-                found = next((x for x in users if x._id == uid), None)
+                found = next((x for x in users if x[0] == uid), None)
                 if found:
-                    tmp = ServieCompte(nom=found.nom, prenom=found.prenom, age=found.age, sexe=found.sexe, email=found.email ,  mdp=getattr(found,'_mdp',''), solde=getattr(found,'_solde',0), id=found._id, numero=found.numero)
+                    tmp = ServieCompte(nom=found[1], prenom=found[2], age=found[3], sexe=found[4], email=found.email ,  mdp=getattr(found,'_mdp',''), solde=getattr(found,'_solde',0), id=found._id, numero=found.numero)
                     tmp.remove_user()
             QMessageBox.information(page, 'Succès', 'Suppression effectuée')
             refresh_list()

@@ -1,6 +1,6 @@
 from reposit import  get_manager
 from model import Compte
-
+import bcrypt
 
 js = get_manager()
 
