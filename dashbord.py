@@ -14,7 +14,6 @@ from expe_page import  Expe
 from liste_users import Stactistique
 
 
-
 from PySide6.QtWidgets import (
     QApplication, QWidget, QPushButton,
     QVBoxLayout, QHBoxLayout, QLabel,
