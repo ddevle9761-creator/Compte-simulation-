@@ -1,4 +1,6 @@
+import hashlib
 
+import bcrypt
 import os
 import json
 
@@ -17,14 +19,18 @@ class Compte:
             self._id = Compte.id_user(Compte.id)
             Compte.id += 1
 
+
         self.nom = nom
         self.prenom = prenom
         self.age = age
         self.sexe = sexe
         self.email = email
-        self._mdp = _mdp.__hash__()
+        self._mdp = _mdp
         self._solde = _solde
         self.numero = numero
+        hasher = str(self._mdp).encode(encoding='UTF-8')
+        self._mdp = hasher
+        self._mdp = bcrypt.hashpw(hasher, bcrypt.gensalt(12))
 
     # pour l'attribution des id
     @classmethod
@@ -153,7 +159,9 @@ def get_manager(file_path=None):
 if __name__ == '__main__':
     manager = get_manager()
     ser = Compte(nom='s', prenom='d', age=18, email='jd', _mdp='123', _solde=100, numero=900, sexe='m')
+    ser1 = Compte(nom='s', prenom='d', age=18, email='jd', _mdp='123', _solde=100, numero=900, sexe='m')
+    print(ser._mdp)
 
-    print(type(ser._solde))
+
 
 

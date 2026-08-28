@@ -8,6 +8,7 @@ from PySide6.QtCharts import (
     QChart, QChartView, QBarSeries, QBarSet,
     QBarCategoryAxis, QValueAxis, QLineSeries, QPieSeries, QScatterSeries
 )
+
 from comptservice import ServieCompte
 from page_user import Page_user
 from expe_page import  Expe
@@ -325,7 +326,7 @@ class App(QWidget):
                 users = ServieCompte.get_users()
                 found = next((x for x in users if x[0] == uid), None)
                 if found:
-                    tmp = ServieCompte(nom=found[1], prenom=found[2], age=found[3], sexe=found[4], email=found.email ,  mdp=getattr(found,'_mdp',''), solde=getattr(found,'_solde',0), id=found._id, numero=found.numero)
+                    tmp = ServieCompte(nom=found[1], prenom=found[2], age=found[3], sexe=found[4], email=found[6] ,  mdp=found[7], solde=found[8], id=found[0], numero=found[5])
                     tmp.remove_user()
             QMessageBox.information(page, 'Succès', 'Suppression effectuée')
             refresh_list()

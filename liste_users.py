@@ -42,7 +42,7 @@ class Stactistique(QtWidgets.QWidget):
         self.main_layout.setContentsMargins(18, 18, 18, 18)
         self.main_layout.setSpacing(16)
 
-        titre = QtWidgets.QLabel('Aperçu des utilisateurs')
+        titre = QtWidgets.QLabel("<h1 style='background-color: #0D1724; color:cyan;'>Aperçu des utilisateurs</h1>")
         titre.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         titre.setStyleSheet('font-size: 22px; font-weight: 700; padding-bottom: 8px;')
         self.main_layout.addWidget(titre)

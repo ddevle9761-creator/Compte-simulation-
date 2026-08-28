@@ -45,8 +45,10 @@ class ServieCompte(Compte):
         base.sauvegarde_user(self.to_dict())
         return True
 
+
     def remove_user(self):
-        user = manager.supprime_par_id(self._id)
+        base = get_manager()
+        base.supprime_par_id(self._id)
         return True
 
     def update_user(self, u):
