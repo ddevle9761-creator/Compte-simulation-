@@ -3,6 +3,7 @@ import sys
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QMessageBox
 from  comptservice import ServieCompte
+import bcrypt
 
 
 class Expe(QtWidgets.QWidget):
@@ -84,7 +85,8 @@ class Expe(QtWidgets.QWidget):
         user = self.comb.currentData()
         self.page = Transfer(expediteur=user)
         edit_password = self.edit_password.text()
-        if user[7] == edit_password:
+        edit_password_bit = edit_password.encode('UTF-8')
+        if bcrypt.checkpw(edit_password_bit, user[7]):
             self.edit_password.setText("")
             self.page.show()
         else:

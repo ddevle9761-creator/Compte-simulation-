@@ -30,8 +30,8 @@ class TransferService:
 
 
         historique = (
-            self.expeditaire.nom,
-            self.destinateur.nom,
+            f"{self.expeditaire.nom}  {self.expeditaire.prenom}",
+            f"{self.destinateur.nom}  {self.destinateur.prenom}",
             self.montant,
             self.date
         )
