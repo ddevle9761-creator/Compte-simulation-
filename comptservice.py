@@ -40,6 +40,7 @@ class ServieCompte(Compte):
 
         )
 
+        )
 
     def save(self):
         base = get_manager()
@@ -112,6 +113,7 @@ class ServieCompte(Compte):
             base.update_solde(self._solde, new_id)
             return True
         return False
+
 
 
 

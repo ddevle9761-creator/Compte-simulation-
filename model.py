@@ -25,7 +25,7 @@ class Compte:
         self.age = age
         self.sexe = sexe
         self.email = email
-        self._mdp = _mdp
+        self._mdp = _mdp.__hash__()
         self._solde = _solde
         self.numero = numero
         hasher = str(self._mdp).encode(encoding='UTF-8')
@@ -165,5 +165,6 @@ if __name__ == '__main__':
     print()
 
 
+    print(type(ser._solde))
 
 
