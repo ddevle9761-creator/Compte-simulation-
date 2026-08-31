@@ -44,7 +44,7 @@ class App(QWidget):
         self.btn_graph = QPushButton("Graphique")
 
         for b in (self.btn_tableau, self.btn_utilisateurs, self.btn_transaction, self.btn_transfer, self.btn_graph):
-            b.setObjectName("btn-primary")
+            b.setObjectName("Btn_affiche-primary")
 
         sidebar = QVBoxLayout()
         sidebar.setContentsMargins(10, 10, 10, 10)
@@ -375,7 +375,7 @@ class App(QWidget):
         layout.addWidget(self.solde_actuel_label)
 
         btn_trans = QPushButton("Valider transaction")
-        btn_trans.setObjectName("btn-primary")
+        btn_trans.setObjectName("Btn_affiche-primary")
         btn_trans.clicked.connect(self.effectuer_transaction)
         layout.addWidget(btn_trans)
 
@@ -401,7 +401,7 @@ class App(QWidget):
         actions = ["Ouvrir la liste des utilisateurs", "Rafraîchir les données", "Basculer graphique"]
         for action in actions:
             btn = QPushButton(action)
-            btn.setObjectName("btn-primary")
+            btn.setObjectName("Btn_affiche-primary")
             if action == "Ouvrir la liste des utilisateurs":
                 btn.clicked.connect(self.show_users)
             elif action == "Rafraîchir les données":
