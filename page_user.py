@@ -24,7 +24,7 @@ class Page_user(QtWidgets.QWidget):
         self.main_layout.setContentsMargins(16, 16, 16, 16)
         self.main_layout.setSpacing(16)
         # En-tête et barre d'actions
-        titre = QtWidgets.QLabel("<i>Utilisateurs</i>")
+        titre = QtWidgets.QLabel("<h1>Utilisateurs</h1>")
         titre.setStyleSheet("font-size: 18px; font-weight: 700; color: #87CEEB;")
         sous_titre = QtWidgets.QLabel("Ajouter, sélectionner et afficher les comptes enregistrés.")
         sous_titre.setStyleSheet("color: #94A3B8; font-size: 13px;")
@@ -218,7 +218,7 @@ class Page_user(QtWidgets.QWidget):
 
         for list_item in selected_items:
             user = list_item.data(QtCore.Qt.UserRole)
-            user.remove_user()
+            user.remove_user
             self.list_user.takeItem(self.list_user.row(list_item))
         QtWidgets.QMessageBox(text='Supprimé avec succès', parent=self,).exec()
         return

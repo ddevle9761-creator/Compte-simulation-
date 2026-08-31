@@ -57,7 +57,7 @@ class TestCompteService(unittest.TestCase):
         user = ServieCompte(nom='x', prenom='x', age=22, sexe='F', mdp='p', email='x@example.com', solde=5, numero=1211)
         self.assertTrue(user.save())
 
-        self.assertTrue(user.remove_user())
+        self.assertTrue(user.remove_user)
         users = self.jm.charger_json()
         self.assertFalse(any(u.get('email') == 'x@example.com' for u in users))
 

@@ -8,11 +8,12 @@ from PySide6.QtCharts import (
     QChart, QChartView, QBarSeries, QBarSet,
     QBarCategoryAxis, QValueAxis, QLineSeries, QPieSeries, QScatterSeries
 )
+
 from comptservice import ServieCompte
 from page_user import Page_user
 from expe_page import  Expe
 from liste_users import Stactistique
-
+from usersinfo import UsersInfo
 
 
 from PySide6.QtWidgets import (
@@ -37,23 +38,26 @@ class App(QWidget):
     def setup_ui(self):
         # Barres de navigation — boutons en colonne
         self.btn_tableau = QPushButton("Tableau")
+        self.btn_user_info = QPushButton("Information")
         self.btn_utilisateurs = QPushButton("Utilisateurs")
         self.btn_transaction = QPushButton("Transactions")
         self.btn_transfer = QPushButton("Transfert")
         self.btn_supprimer = QPushButton("Supprimer")
         self.btn_graph = QPushButton("Graphique")
 
+
         for b in (self.btn_tableau, self.btn_utilisateurs, self.btn_transaction, self.btn_transfer, self.btn_graph):
             b.setObjectName("Btn_affiche-primary")
 
         sidebar = QVBoxLayout()
         sidebar.setContentsMargins(10, 10, 10, 10)
-        sidebar.setSpacing(10)
+        sidebar.setSpacing(20)
         sidebar.addWidget(self.btn_tableau)
         sidebar.addWidget(self.btn_utilisateurs)
         sidebar.addWidget(self.btn_transaction)
         sidebar.addWidget(self.btn_transfer)
         sidebar.addWidget(self.btn_graph)
+        sidebar.addWidget(self.btn_user_info)
         sidebar.addStretch(1)
         sidebar.addWidget(self.btn_supprimer)
 
@@ -64,11 +68,13 @@ class App(QWidget):
         self.page_utilisateur = Page_user()
         self.page_trasfer = Expe()
         self.page_graph = Stactistique()
+        self.page_users_info = UsersInfo()
         self.pile_pages.addWidget(self.page_utilisateur)
         self.pile_pages.addWidget(self.creer_page_supprimer())
         self.pile_pages.addWidget(self.creer_page_transaction())
         self.pile_pages.addWidget(self.page_trasfer)
         self.pile_pages.addWidget(self.page_graph)
+        self.pile_pages.addWidget(self.page_users_info)
 
         main_layout = QHBoxLayout(self)
         main_layout.setContentsMargins(16, 16, 16, 16)
@@ -324,9 +330,9 @@ class App(QWidget):
                     continue
                 
                 users = ServieCompte.get_users()
-                found = next((x for x in users if x._id == uid), None)
+                found = next((x for x in users if x[0] == uid), None)
                 if found:
-                    tmp = ServieCompte(nom=found.nom, prenom=found.prenom, age=found.age, sexe=found.sexe, email=found.email ,  mdp=getattr(found,'_mdp',''), solde=getattr(found,'_solde',0), id=found._id, numero=found.numero)
+                    tmp = ServieCompte(nom=found[1], prenom=found[2], age=found[3], sexe=found[4], email=found[6] ,  mdp=found[7], solde=found[8], id=found[0], numero=found[5])
                     tmp.remove_user()
             QMessageBox.information(page, 'Succès', 'Suppression effectuée')
             refresh_list()
@@ -355,7 +361,7 @@ class App(QWidget):
 
         montant_layout = QHBoxLayout()
         self.transaction_montant = QSpinBox()
-        self.transaction_montant.setRange(1, 100000)
+        self.transaction_montant.setRange(1, 1000000)
         self.transaction_montant.setPrefix("Montant : ")
         montant_layout.addWidget(self.transaction_montant)
 
@@ -466,7 +472,7 @@ class App(QWidget):
             return
         user = ServieCompte.get_user_by_id(uid)
         if user:
-            self.solde_actuel_label.setText(f"Solde actuel : {user._solde} fcfa")
+            self.solde_actuel_label.setText(f"Solde actuel : {user['Solde']} fcfa")
         else:
             self.solde_actuel_label.setText("Solde actuel : 0")
 
@@ -481,13 +487,16 @@ class App(QWidget):
         if user is None:
             QMessageBox.warning(self, 'Erreur', "Utilisateur introuvable")
             return
-        if action == 'retrait' and int(montant) > user._solde:
+        if action == 'retrait' and int(montant) > user["Solde"]:
             QMessageBox.warning(self, 'Erreur', "Solde insuffisant")
             return
 
+
+        user = ServieCompte(nom=user["Nom"], prenom=["Prenom"], age=user["Age"], sexe=user["Sexe"], numero=user["Numero"], email=user["Email"], mdp=user["Mdp"], solde=user["Solde"], id=user["ID"])
         if not user.transacter(int(montant), action):
             QMessageBox.warning(self, 'Erreur', "Transaction impossible")
             return
+
         QMessageBox.information(self, 'Succès', 'Transaction enregistrée')
         self.refresh_dashboard()
         self.refresh_user_preview()
@@ -499,6 +508,7 @@ class App(QWidget):
         self.btn_supprimer.clicked.connect(self.afficher_page_supprimer)
         self.btn_transfer.clicked.connect(self.afficher_page_transfert)
         self.btn_graph.clicked.connect(self.afficher_page_graph)
+        self.btn_user_info.clicked.connect(self.afficher_page_infos)
 
     def show_dashboard(self):
         self.pile_pages.setCurrentIndex(0)
@@ -523,6 +533,9 @@ class App(QWidget):
 
     def afficher_page_graph(self):
         self.pile_pages.setCurrentIndex(5)
+
+    def afficher_page_infos(self):
+        self.pile_pages.setCurrentIndex(6)
 
     def basculer_mode_graphique(self):
         current = getattr(self, 'mode_graphique', 'hist')
