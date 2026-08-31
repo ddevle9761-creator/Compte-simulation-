@@ -141,6 +141,8 @@ class Compte:
         else:
             exp._solde -= montant
             dst.recevoir(montant)
+            return True
+
 
 
 
@@ -160,7 +162,7 @@ if __name__ == '__main__':
     manager = get_manager()
     ser = Compte(nom='s', prenom='d', age=18, email='jd', _mdp='123', _solde=100, numero=900, sexe='m')
     ser1 = Compte(nom='s', prenom='d', age=18, email='jd', _mdp='123', _solde=100, numero=900, sexe='m')
-    print(ser._mdp)
+    print()
 
 
 

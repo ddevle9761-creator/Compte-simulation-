@@ -120,7 +120,6 @@ class JsonManager:
             return data
         except Exception as e:
             return str(e)
-        conn.close()
 
 
     def rechercher_par_id(self, id):
@@ -132,6 +131,18 @@ class JsonManager:
             return data
         except Exception as e:
             return str(e)
+
+    def update_solde(self, solde, id):
+        try:
+            conn = sqlite3.connect(self.user_file)
+            cursor = conn.cursor()
+            cursor.execute("UPDATE users SET solde = ? WHERE id = ? ",(solde, id))
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            return str(e)
+        return True
+
 
 
     def __transaction_table__(self):
@@ -151,7 +162,7 @@ class JsonManager:
             return True
         except Exception as e:
             return str(e)
-        return False
+
 
     def sauvegarde_transaction(self, historique):
         if self.__transaction_table__():

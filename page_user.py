@@ -32,13 +32,13 @@ class Page_user(QtWidgets.QWidget):
 
         # créer les boutons d'action (ils seront placés en bas de la page)
         self.Btn_add_user = QtWidgets.QPushButton("Ajouter")
-        self.Btn_add_user.setObjectName('btn-primary')
+        self.Btn_add_user.setObjectName('Btn_affiche-primary')
         self.Btn_remove_user = QtWidgets.QPushButton("Supprimer")
-        self.Btn_remove_user.setObjectName('btn-logout')
+        self.Btn_remove_user.setObjectName('Btn_affiche-logout')
         self.Btn_show_info = QtWidgets.QPushButton('Afficher')
-        self.Btn_show_info.setObjectName('btn-primary')
+        self.Btn_show_info.setObjectName('Btn_affiche-primary')
         self.Btn_refresh = QtWidgets.QPushButton('Rafraîchir')
-        self.Btn_refresh.setObjectName('btn-primary')
+        self.Btn_refresh.setObjectName('Btn_affiche-primary')
 
         # Ajustement UI taille des boutons
         for b in (self.Btn_add_user, self.Btn_remove_user, self.Btn_show_info, self.Btn_refresh):

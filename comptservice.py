@@ -25,17 +25,18 @@ class ServieCompte(Compte):
     def to_dict(self):
         return super().to_dict()
 
-
+    @staticmethod
     def make_obj(user):
         return ServieCompte(
-            nom=user[0],
-            prenom=user[1],
-            age=user[2],
-            sexe=user[3],
-            numero=user[4],
-            email=user[5],
-            mdp=user[5],
-            solde=user[6]
+            id=None,
+            nom=user.nom,
+            prenom=user.prenom,
+            age=user.age,
+            sexe=user.sexe,
+            numero=user.numero,
+            email=user.email,
+            mdp=user._mdp,
+            solde=user._solde
 
         )
 
@@ -70,11 +71,23 @@ class ServieCompte(Compte):
     def show_user(self):
         return self.show_info()
 
-    def deposer(self, value:int):
-        return super().deposer(value)
+    def deposer(self, value: int):
+        if super().deposer(value):
+            base = get_manager()
+            if base.rechercher_par_id(self._id) is not None or isinstance(self._id, (int, str)):
+                new_id = int(self._id)
+                base.update_solde(self._solde, new_id)
+            return True
+        return False
 
     def retirer(self, value:int):
-        return super().retirer(value)
+        if super().retirer(value):
+            base = get_manager()
+            if base.rechercher_par_id(self._id) is not None or isinstance(self._id, (int, str)):
+                new_id = int(self._id)
+                base.update_solde(self._solde, new_id)
+            return True
+        return False
 
     def transacter(self, montant:int, action='depot'):
         if action == 'depot':
@@ -84,6 +97,7 @@ class ServieCompte(Compte):
         else:
             return False
         if ok:
+
             return True
         return False
 
@@ -92,6 +106,13 @@ class ServieCompte(Compte):
             raise ValueError('Solde insuffisant')
         exp._solde -= montant
         super().transferer(exp, dst, montant)
+        base = get_manager()
+        if base.rechercher_par_id(self._id) is not None or isinstance(self._id, (int, str)):
+            new_id = int(self._id)
+            base.update_solde(self._solde, new_id)
+            return True
+        return False
+
 
 
     @staticmethod
@@ -110,9 +131,9 @@ class ServieCompte(Compte):
 
     @staticmethod
     def get_user_by_id(user_id):
-        babe = get_manager()
-        user = babe.rechercher_par_id(user_id)
-        return ServieCompte(
+        base = get_manager()
+        user = base.rechercher_par_id(user_id)
+        OBJET = ServieCompte(
             id=user_id,
             nom=user[1],
             prenom=user[2],
@@ -124,6 +145,17 @@ class ServieCompte(Compte):
             solde=user[8]
 
         )
+        return {"ID": user_id,
+                "Nom": OBJET.nom,
+                "Prenom": OBJET.prenom,
+                "Age": OBJET.age,
+                "Sexe": OBJET.sexe,
+                "Numero": OBJET.numero,
+                "Email": OBJET.email,
+                "Solde": OBJET.solde,
+                "Mdp": OBJET._mdp
+                }
+
 
     @staticmethod
     def total_balance():
@@ -155,9 +187,10 @@ if __name__ == '__main__':
     manager = get_manager()
     ser = ServieCompte(nom='s', prenom='d', age=18, email='jd', mdp='123', solde=100, numero=900, sexe='m')
 
-    user = ('nom', 'prenom', 10, 'email', 'mdp', 'solde', 'numero', 'sexe')
-    for i in ServieCompte.get_users():
-        print(i)
+    user = ServieCompte(nom='qa', prenom='daa', age=19, email='dfk', mdp='123', solde=100, numero=900, sexe='m')
+    print(ser.transferer(dst=ser, exp=user, montant=10))
+    print(ser._solde)
+    print(user._solde)
 
 
 
