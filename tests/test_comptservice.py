@@ -2,7 +2,7 @@ import os
 import tempfile
 import unittest
 
-from sauvegarde_json import JsonManager
+from reposit import JsonManager
 from comptservice import ServieCompte
 
 
@@ -14,9 +14,9 @@ class TestCompteService(unittest.TestCase):
         if os.path.exists(self.test_file):
             os.remove(self.test_file)
         
-        import sauvegarde_json
-        sauvegarde_json._DEFAULT_MANAGER = JsonManager(self.test_file)
-        self.jm = sauvegarde_json._DEFAULT_MANAGER
+        import reposit
+        reposit._DEFAULT_MANAGER = JsonManager(self.test_file)
+        self.jm = reposit._DEFAULT_MANAGER
 
     def test_premier_t(self):
         if os.path.exists(self.test_file):
@@ -57,7 +57,7 @@ class TestCompteService(unittest.TestCase):
         user = ServieCompte(nom='x', prenom='x', age=22, sexe='F', mdp='p', email='x@example.com', solde=5, numero=1211)
         self.assertTrue(user.save())
 
-        self.assertTrue(user.remove_user)
+        self.assertTrue(user.remove_user())
         users = self.jm.charger_json()
         self.assertFalse(any(u.get('email') == 'x@example.com' for u in users))
 

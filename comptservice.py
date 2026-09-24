@@ -40,7 +40,7 @@ class ServieCompte(Compte):
 
         )
 
-        )
+
 
     def save(self):
         base = get_manager()
@@ -190,9 +190,7 @@ if __name__ == '__main__':
     ser = ServieCompte(nom='s', prenom='d', age=18, email='jd', mdp='123', solde=100, numero=900, sexe='m')
 
     user = ServieCompte(nom='qa', prenom='daa', age=19, email='dfk', mdp='123', solde=100, numero=900, sexe='m')
-    print(ser.transferer(dst=ser, exp=user, montant=10))
-    print(ser._solde)
-    print(user._solde)
+
 
 
 

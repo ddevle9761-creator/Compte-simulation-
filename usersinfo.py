@@ -139,24 +139,6 @@ class UsersInfo(QtWidgets.QWidget):
         self.recherch(filter_text=texte)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = UsersInfo()

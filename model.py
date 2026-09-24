@@ -117,15 +117,14 @@ class Compte:
 
 
     def envoyer(self, dst, montant):
-        ok = False
+
         if montant <= 0:
             raise ValueError('Montant invalide')
         if self._solde < montant :
             raise ValueError('Solde insuffisant')
         self._solde -= montant
         dst.recevoir(montant)
-        ok = True
-        return ok
+        return True
 
 
     def recevoir(self, montant:int):
@@ -162,9 +161,8 @@ if __name__ == '__main__':
     manager = get_manager()
     ser = Compte(nom='s', prenom='d', age=18, email='jd', _mdp='123', _solde=100, numero=900, sexe='m')
     ser1 = Compte(nom='s', prenom='d', age=18, email='jd', _mdp='123', _solde=100, numero=900, sexe='m')
-    print()
 
 
-    print(type(ser._solde))
+
 
 

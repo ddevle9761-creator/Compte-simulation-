@@ -115,28 +115,15 @@ QPushButton#btn-primary:hover {
     background-color: #60A5FA;
 }
 
-QPushButton#send-btn {
+QPushButton#send-Copier {
     background-color: #3B82F6;
     color: #FFFFFF;
     border: none;
     border-radius: 10px;
-    padding: 10px 18px;
-    font-weight: 600;
+
 }
 
-QPushButton#send-btn:hover {
-    background-color: #60A5FA;
-}
 
-QPushButton#btn-chatbot {
-    background-color: #EC4899;
-    color: #FFFFFF;
-    border: none;
-}
-
-QPushButton#btn-chatbot:hover {
-    background-color: #F472B6;
-}
 
 QPushButton#btn-eleves {
     background-color: #3B82F6;
@@ -376,25 +363,11 @@ QTextEdit.chat-display {
     color: #F1F5F9;
 }
 
-/* ---------- QCheckBox ---------- */
-QCheckBox {
-    spacing: 8px;
-    color: #F1F5F9;
-    font-size: 14px;
-}
 
-QCheckBox::indicator {
-    width: 20px;
-    height: 20px;
-    border-radius: 6px;
-    border: 2px solid #334155;
-    background-color: #151E32;
-}
 
-QCheckBox::indicator:checked {
-    background-color: #3B82F6;
-    border: 2px solid #3B82F6;
-}
+
+
+
 
 /* ---------- QScrollBar ---------- */
 QScrollBar:vertical {
@@ -403,20 +376,6 @@ QScrollBar:vertical {
     border-radius: 5px;
 }
 
-QScrollBar::handle:vertical {
-    background-color: #334155;
-    border-radius: 5px;
-    min-height: 30px;
-}
-
-QScrollBar::handle:vertical:hover {
-    background-color: #475569;
-}
-
-QScrollBar::add-line:vertical,
-QScrollBar::sub-line:vertical {
-    height: 0px;
-}
 
 QScrollBar:horizontal {
     background-color: #0B1120;
